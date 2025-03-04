@@ -19,3 +19,5 @@ AUXILIARY INERTIAL MEASUREMENT UNIT
 
 PCB QUESTIONS:
 I want to make a V_bus for 3.3V
+
+connor test
