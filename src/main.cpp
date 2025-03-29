@@ -1,18 +1,33 @@
 #include <Arduino.h>
+#include <SPI.h>
 
-// put function declarations here:
-int myFunction(int, int);
+const int PrimaryIMUSlaveSelectPin = 12;
+
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+
+  Serial.begin(115200);
+  Serial.println("flag 1");
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(PrimaryIMUSlaveSelectPin, OUTPUT);
+  digitalWrite(PrimaryIMUSlaveSelectPin, HIGH);
+  SPI.begin();
+
 }
+
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(500);
+
+  digitalWrite(PrimaryIMUSlaveSelectPin, LOW);
+  byte response = SPI.transfer(0xFF);
+  digitalWrite(PrimaryIMUSlaveSelectPin, HIGH);
+
+  Serial.print(response);
+
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(5000);
+
 }
