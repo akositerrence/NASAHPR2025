@@ -1,34 +1,42 @@
 #include <Arduino.h>
 #include <SPI.h>
+#include <prm_imu.h>
 
-const int PrimaryIMUSlaveSelectPin = 10;
+// PIN ASSIGNMENTS
+const int primaryIMUSlaveSelectPin = 10;
 
 void setup() {
 
+  // SERIAL COMMUNICATION INITIALIZATION 
   Serial.begin(9600);
   while (!Serial) { ; } 
 
-  pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(PrimaryIMUSlaveSelectPin, OUTPUT);
-  digitalWrite(PrimaryIMUSlaveSelectPin, HIGH);
-
+  // INITIALIZE SPI PROTOCOL
   SPI.begin();
+
+  // PIN MODES
+  pinMode(primaryIMUSlaveSelectPin, OUTPUT);
+
+  // SENSOR INITIALIZATION 
+  prmIMUInitialize(primaryIMUSlaveSelectPin);
+
+  Serial.println("Setup Complete");
 
 }
 
 void loop() {
+  
+  Serial.println("Loop Entered");
+  // ICM20948 OUTPUTS
+  prmIMUData icm20948 = readPrmIMUData();
+  Serial.println("ICM20948Accel : [ ");
+  Serial.print(icm20948.acceleration[0]);
+  Serial.print(" ");
+  Serial.print(icm20948.acceleration[1]);
+  Serial.print(" ");
+  Serial.print(icm20948.acceleration[2]);
+  Serial.print(" ]");
 
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(500);
-  Serial.println("Output Flag");
-
-  digitalWrite(PrimaryIMUSlaveSelectPin, LOW);
-  byte received = SPI.transfer(0xFF);
-  digitalWrite(PrimaryIMUSlaveSelectPin, HIGH);
-
-  Serial.println(received);
-
-  digitalWrite(LED_BUILTIN, LOW);
   delay(500);
 
 }
