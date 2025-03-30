@@ -25,18 +25,16 @@ void setup() {
 }
 
 void loop() {
-  
-  Serial.println("Loop Entered");
+
   // ICM20948 OUTPUTS
   prmIMUData icm20948 = readPrmIMUData();
-  Serial.println("ICM20948Accel : [ ");
+  Serial.print("ICM20948Accel : ");
   Serial.print(icm20948.acceleration[0]);
   Serial.print(" ");
   Serial.print(icm20948.acceleration[1]);
   Serial.print(" ");
-  Serial.print(icm20948.acceleration[2]);
-  Serial.print(" ]");
+  Serial.println(icm20948.acceleration[2]);
 
-  delay(500);
+  delay(10);
 
 }
