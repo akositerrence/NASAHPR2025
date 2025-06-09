@@ -1,11 +1,13 @@
-#ifndef BMP_H
-#define BMP_H
+#ifndef bmp_h
+#define bmp_h
 
-struct BMPData {
-    float pressure_temperature[2];
+struct bmp_data {
+    float temperature;
+    float pressure;
+    float altitude;
 };
 
-void BMPInitialize(int selectPin);
-BMPData readBMPData();
+void bmp_initialize();
+bmp_data read_bmp_data();
 
-#endif // BMP_H
+#endif

@@ -1,42 +1,33 @@
-#include <bmp.h>
 #include <Arduino.h>
-#include <SPI.h>
+#include <Wire.h>
+#include "bmp.h"
 #include <Adafruit_BMP3XX.h>
 
-Adafruit_BMP3XX bmp;    // CREATE SENSOR OBJECT
-int BMPSlaveSelectPin;   // GLOBAL SELECT PIN
+Adafruit_BMP3XX bmp;
 
-void BMPInitialize(int selectPin) {
+void bmp_initialize() {
 
-    BMPSlaveSelectPin = selectPin;   // RECEIVE SELECT PIN
-    digitalWrite(BMPSlaveSelectPin, HIGH);
+    while (true) {
+        if(bmp.begin_I2C()) { break; } 
+    } 
 
-    // SPI SANITY CHECK
-    Serial.println("Attempting BMP390 SPI initialization...");
-    if (!bmp.begin_SPI(BMPSlaveSelectPin)) {
-      Serial.println("Failed to initialize BMP390 via SPI");
-    }
-    Serial.println("BMP390 SPI initialization successful");
-
-    // SET BMP390 CONFIGURATION
     bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
-    bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
+    bmp.setPressureOversampling(BMP3_OVERSAMPLING_8X);
     bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
     bmp.setOutputDataRate(BMP3_ODR_50_HZ);
+
 }
 
-BMPData readBMPData() {
-   
-    digitalWrite(BMPSlaveSelectPin, LOW);
+bmp_data read_bmp_data() {
 
-    // NEW SENSOR EVENT
+    bmp_data data;
+
     bmp.performReading();
 
-    // STRUCT STORAGE
-    BMPData data;
-    data.pressure_temperature[0] = bmp.pressure;
-    data.pressure_temperature[1] = bmp.temperature;
+    data.temperature = bmp.temperature;
+    data.pressure = bmp.pressure;
+    data.altitude = bmp.readAltitude(1013.25);
 
-    return data;
+    return data; 
 
 }
